@@ -27,6 +27,10 @@ app.listen(port, () =>
     console.log(`App is listening on port ${port}.`)
 );
 
+app.get('/', async (req, response) => {
+    response.status(200).send({message: "Hello world"})
+})
+
 app.post('/upload', async (req, response) => {
     try {
         if (!req.files) {
