@@ -21,13 +21,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 //start app 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
-app.listen(port, () =>
-    console.log(`App is listening on port ${port}.`)
-);
 
-app.get('/', async (req, response) => {
+app.get('/', (request, response) => {
     response.status(200).send({message: "Hello world"})
 })
 
@@ -41,27 +38,32 @@ app.post('/upload', async (req, response) => {
         } else {
             //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
             let avatar = req.files.avatar;
-
+            
             //Use the mv() method to place the file in upload directory (i.e. "uploads")
             await avatar.mv('./uploads/' + avatar.name);
-
-
+            
+            
             imgur.setClientID("53d5bfeb034a8bf");
-             imgur.upload(path.join(__dirname, `/uploads/${avatar.name}`), function (err, res) {
+            imgur.upload(path.join(__dirname, `/uploads/${avatar.name}`), function (err, res) {
                 console.log(res.data.link); //log the imgur url
                 response.send({
-                status: true,
-                message: 'File is uploaded',
-                data: {
-                    name: avatar.name,
-                    mimetype: avatar.mimetype,
-                    size: avatar.size,
-                    url: res.data.link
-                }
-            });
+                    status: true,
+                    message: 'File is uploaded',
+                    data: {
+                        name: avatar.name,
+                        mimetype: avatar.mimetype,
+                        size: avatar.size,
+                        url: res.data.link
+                    }
+                });
             });
         }
     } catch (err) {
         res.status(500).send(err);
     }
+    
 });
+
+app.listen(port, () =>
+    console.log(`App is listening on port ${port}.`)
+);
