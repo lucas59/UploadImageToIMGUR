@@ -1,69 +1,50 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const _ = require('lodash');
-var imgur = require('imgur-upload');
-let path = require('path');
-
+const imgur = require("imgur-upload");
+const path = require('path');
+const port = process.env.PORT || 3001;
 const app = express();
-
-// enable files upload
 app.use(fileUpload({
-    createParentPath: true
+  limits: { fileSize: 50 * 1024 * 1024 },
 }));
 
-//add other middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan('dev'));
+app.get('/', (req, res) => res.send('Home Page Route'));
 
-//start app 
-const port = process.env.PORT || 3001;
-
-
-app.get('/', (request, response) => {
-    response.status(200).send({message: "Hello world"})
-})
-
-app.post('/upload', async (req, response) => {
+app.post('/upload', async (request, response) => {
     try {
-        if (!req.files) {
+        if (!request.files) {
             response.send({
                 status: false,
                 message: 'No file uploaded'
             });
         } else {
             //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-            let avatar = req.files.avatar;
+            let file = request.files.file;
             
             //Use the mv() method to place the file in upload directory (i.e. "uploads")
-            await avatar.mv('./uploads/' + avatar.name);
+            await file.mv('./uploads/' + file.name);
             
             
             imgur.setClientID("53d5bfeb034a8bf");
-            imgur.upload(path.join(__dirname, `/uploads/${avatar.name}`), function (err, res) {
+            imgur.upload(path.join(__dirname, `/uploads/${file.name}`), function (err, res) {
                 console.log(res.data.link); //log the imgur url
                 response.send({
                     status: true,
                     message: 'File is uploaded',
                     data: {
-                        name: avatar.name,
-                        mimetype: avatar.mimetype,
-                        size: avatar.size,
+                        name: file.name,
+                        mimetype: file.mimetype,
+                        size: file.size,
                         url: res.data.link
                     }
                 });
             });
         }
     } catch (err) {
-        res.status(500).send(err);
+        console.log(err);
+        response.status(500).send(err);
     }
     
 });
 
-app.listen(port, () =>
-    console.log(`App is listening on port ${port}.`)
-);
+app.listen(port, () => console.log(`Server running on ${port}, http://localhost:${port}`));
