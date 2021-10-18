@@ -1,6 +1,5 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
-const fs = require('fs');
 const imgur = require("imgur-upload");
 const path = require('path');
 const port = process.env.PORT || 3001;
@@ -29,9 +28,9 @@ app.post('/upload', async (request, response) => {
             imgur.setClientID("53d5bfeb034a8bf");
             imgur.upload(path.join(__dirname, `/uploads/${file.name}`), function (err, res) {
                 
-            fs.unlink(path.join(__dirname, `/uploads/${file.name}`),(err)=>{
-                console.log(err);
-            });
+            // fs.unlink(path.join(__dirname, `/uploads/${file.name}`),(err)=>{
+            //     console.log(err);
+            // });
 
                 response.send({
                     status: true,
