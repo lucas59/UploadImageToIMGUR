@@ -1,5 +1,6 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
 const imgur = require("imgur-upload");
 const path = require('path');
 const port = process.env.PORT || 3001;
@@ -20,7 +21,10 @@ app.post('/upload', async (request, response) => {
         } else {
             //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
             let file = request.files.file;
-            
+            var dir = './uploads';
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
             //Use the mv() method to place the file in upload directory (i.e. "uploads")
             await file.mv('./uploads/' + file.name);
             
@@ -28,9 +32,9 @@ app.post('/upload', async (request, response) => {
             imgur.setClientID("53d5bfeb034a8bf");
             imgur.upload(path.join(__dirname, `/uploads/${file.name}`), function (err, res) {
                 
-            // fs.unlink(path.join(__dirname, `/uploads/${file.name}`),(err)=>{
-            //     console.log(err);
-            // });
+            fs.unlink(path.join(__dirname, `/uploads/${file.name}`),(err)=>{
+                console.log(err);
+            });
 
                 response.send({
                     status: true,
