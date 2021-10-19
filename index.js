@@ -5,9 +5,14 @@ const imgur = require("imgur-upload");
 const path = require('path');
 const port = process.env.PORT || 3001;
 const app = express();
+const cors = require('cors');
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
+
+app.use(cors({
+    origin:"*"
+}))
 
 app.get('/', (req, res) => res.send('Home Page Route'));
 
