@@ -40,9 +40,9 @@ app.post("/upload", async (request, response) => {
 
       imgur.setClientID("24e5f2ddbc76e0d");
       imgur.upload(
-        path.join(__dirname, `/tmp/${file.name}`),
+        path.join(`/tmp/${file.name}`),
         function (err, res) {
-          fs.unlink(path.join(__dirname, `/tmp/${file.name}`), (err) => {
+          fs.unlink(path.join(`/tmp/${file.name}`), (err) => {
             console.log(err);
           });
 
