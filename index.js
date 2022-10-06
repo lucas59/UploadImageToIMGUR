@@ -18,11 +18,6 @@ app.use(
   })
 );
 
-var dir = "./uploads";
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir);
-}
-
 app.get("/", (req, res) => res.send("Home Page Route"));
 
 app.post("/upload", async (request, response) => {
@@ -35,19 +30,19 @@ app.post("/upload", async (request, response) => {
     } else {
       //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
       let file = request.files.file;
-      var dir = "./uploads";
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-      }
+    //   var dir = "./uploads";
+    //   if (!fs.existsSync(dir)) {
+    //     fs.mkdirSync(dir);
+    //   }
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      console.log(file);
-      await file.mv("./uploads/" + file.name);
+      
+      await file.mv("./" + file.name);
 
       imgur.setClientID("24e5f2ddbc76e0d");
       imgur.upload(
-        path.join(__dirname, `/uploads/${file.name}`),
+        path.join(__dirname, `/${file.name}`),
         function (err, res) {
-          fs.unlink(path.join(__dirname, `/uploads/${file.name}`), (err) => {
+          fs.unlink(path.join(__dirname, `/${file.name}`), (err) => {
             console.log(err);
           });
 
