@@ -30,19 +30,19 @@ app.post("/upload", async (request, response) => {
     } else {
       //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
       let file = request.files.file;
-    //   var dir = "./uploads";
-    //   if (!fs.existsSync(dir)) {
-    //     fs.mkdirSync(dir);
-    //   }
+      var dir = "/tmp";
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      
-      await file.mv("./" + file.name);
+      console.log(file);
+      await file.mv("./tmp/" + file.name);
 
       imgur.setClientID("24e5f2ddbc76e0d");
       imgur.upload(
-        path.join(__dirname, `/${file.name}`),
+        path.join(__dirname, `/tmp/${file.name}`),
         function (err, res) {
-          fs.unlink(path.join(__dirname, `/${file.name}`), (err) => {
+          fs.unlink(path.join(__dirname, `/tmp/${file.name}`), (err) => {
             console.log(err);
           });
 
