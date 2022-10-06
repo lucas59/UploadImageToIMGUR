@@ -36,7 +36,7 @@ app.post("/upload", async (request, response) => {
       }
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
       console.log(file);
-      await file.mv("./tmp/" + file.name);
+      await file.mv("/tmp/" + file.name);
 
       imgur.setClientID("24e5f2ddbc76e0d");
       imgur.upload(
