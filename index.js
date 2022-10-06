@@ -31,10 +31,11 @@ app.post('/upload', async (request, response) => {
                 fs.mkdirSync(dir);
             }
             //Use the mv() method to place the file in upload directory (i.e. "uploads")
+            console.log(file);
             await file.mv('./uploads/' + file.name);
             
             
-            imgur.setClientID("53d5bfeb034a8bf");
+            imgur.setClientID("24e5f2ddbc76e0d");
             imgur.upload(path.join(__dirname, `/uploads/${file.name}`), function (err, res) {
                 
             fs.unlink(path.join(__dirname, `/uploads/${file.name}`),(err)=>{
