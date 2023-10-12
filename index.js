@@ -38,7 +38,7 @@ app.post("/upload", async (request, response) => {
       console.log(file);
       await file.mv("/tmp/" + file.name);
 
-      imgur.setClientID("24e5f2ddbc76e0d");
+      imgur.setClientID("ce95e921a10d4d7");
       imgur.upload(
         path.join(`/tmp/${file.name}`),
         function (err, res) {
